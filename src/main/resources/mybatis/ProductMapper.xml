@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.ProductMapper">
+
+    <select id="findAll" resultType="Product" >
+        select * from product
+    </select>
+
+    <select id="findByName" resultType="Product" parameterType="Product">
+        select * from product <where>
+        <if test="pname!=null">
+            pname=#{pname}
+        </if>
+        <if test="shop_price!=null">
+            and shop_price=#{shop_price}
+        </if>
+    </where>
+    </select>
+
+    <select id="getProductById" resultType="Product" parameterType="int">
+        select * from product where pid=#{id}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="int">
+        delete from product where pid = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="Product">
+        insert into product (pid, pname, shop_price,pimage, pdesc)
+        values (#{pid}, #{pname}, #{shop_price},#{pimage}, #{pdesc})
+    </insert>
+
+    <update id="updateByKey" parameterType="int">
+        update product set pname=#{pname},shop_price=${shop_price},${pimage},${pdesc} where id=#{pid}
+    </update>
+
+</mapper>
