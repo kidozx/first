@@ -55,30 +55,51 @@
 <%--</table>--%>
 
 <%--</form>--%>
-<table class="layui-table" id="test"></table>
+
+
+<table class="layui-table" lay-data="{width: 1000, height:300, url:'${pageContext.request.contextPath}/product', page:true, id:'idTest'}" lay-filter="demo">
+	<thead>
+	<tr>
+		<th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+		<th lay-data="{field:'pid', width:100, title: '商品编号', sort: true}"></th>
+		<th lay-data="{field:'pname', width:150, title: '商品名称'}"></th>
+		<th lay-data="{field:'shop_price', width:100, title: '本店价格'}"></th>
+		<th lay-data="{field:'pdate', width:150, title: '上架日期', sort: true}"></th>
+		<th lay-data="{field:'pdesc', width:350, title: '描述'}"></th>
+		<th lay-data="{field:'experience', width:80, sort: true}"></th>
+
+		<th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}"></th>
+	</tr>
+	</thead>
+</table>
 <script src="static/layui/layui.all.js"></script>
 </body>
+<script type="text/html" id="barDemo">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 <script>
-	layui.use('table', function(){
+	layui.use('table', function() {
 		var table = layui.table;
-		table.render({
-			elem: '#test'
-			,url:'${pageContext.request.contextPath}/product'
-			,high:60
-			,page: true
-			,cols: [[
-				 //{width:100, title: '商品'}
-				,{field:'pid', width:100, title: '商品编号', sort: true}
-				,{field:'pname', width:130, title: '商品名称'}
-				// ,{field:'market_price', width:100, title: '超市价格', sort: true}
-				,{field:'shop_price', width:100, title: '线上价格'}
-				// ,{field:'pimage', title: '图片路径', width: 150}
-				,{field:'pdate', width:150, title: '上架日期', sort: true}
-				// ,{field:'is_hot', width:80, title: '是否热门', sort: true}
-				,{field:'pdesc', width:350, title: '描述'}
-			]]
-
+		//监听表格复选框选择
+		table.on('checkbox(demo)', function (obj) {
+			console.log(obj)
 		});
-	});
+		//监听工具条
+		table.on('tool(demo)', function (obj) {
+			var data = obj.data;
+			if (obj.event === 'detail') {
+				layer.msg('ID：' + data.id + ' 的查看操作');
+			} else if (obj.event === 'del') {
+				layer.confirm('真的删除行么', function (index) {
+					obj.del();
+					layer.close(index);
+				});
+			} else if (obj.event === 'edit') {
+				layer.alert('编辑行：<br>' + JSON.stringify(data))
+			}
+		});
+	})
 </script>
 </html>
